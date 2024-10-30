@@ -1,0 +1,21 @@
+- name: Gather the package facts
+  ansible.builtin.package_facts:
+    manager: apt
+- name: "Check if xz-utils is installed and install it when missing"
+  apt: 
+    name: xz-utils 
+    state: present 
+    update_cache: false
+  when: "'xz-utils' not in ansible_facts.packages"
+- name: "Check if rsync is installed and install it when missing"
+  apt: 
+    name: rsync 
+    state: present 
+    update_cache: false
+  when: "'rsync' not in ansible_facts.packages"
+- name: "Check if kpartx is installed and install it when missing"
+  apt: 
+    name: kpartx 
+    state: present 
+    update_cache: false
+  when: "'kpartx' not in ansible_facts.packages"

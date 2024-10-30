@@ -1,0 +1,13 @@
+- name: Copy dietpi.txt config file to /mnt/nfsshare/tftp/{{ name_of_folder }}
+  ansible.builtin.copy:
+    src: /mnt/nfsshare/tftp/common/dietpi.txt
+    dest: "/mnt/nfsshare/tftp/{{ name_of_folder }}"
+    owner: root
+    group: root
+    mode: "0644"
+    remote_src: true
+- name: Replace Hostname of the agent node with {{ hostname }}
+  replace:
+    path: "/mnt/nfsshare/tftp/{{ name_of_folder }}/dietpi.txt"
+    regexp: "<REPLACE-HOSTNAME>"
+    replace: "{{ hostname }}"

@@ -1,0 +1,19 @@
+- name: Execute the pre-condistions for the installation
+  ansible.builtin.import_tasks: task/00.pre.install.yaml
+- name: Install all nessacary packages
+  ansible.builtin.include_tasks: task/01.install.dependencies.yaml
+- name:  
+  block:
+    - name: 
+      ansible.builtin.import_tasks: task/02.create.directories.yaml
+    - name: 
+      ansible.builtin.import_tasks: task/05.download.image.yaml
+    - name: 
+      ansible.builtin.import_tasks: task/06.mount.image.yaml
+    - name: 
+      ansible.builtin.import_tasks: task/07.transfer.directories.to.nfs.yaml
+    - name: 
+      ansible.builtin.import_tasks: task/08.system.configuration.yaml
+  always:
+    - name: Remove temporary directories, loops devices, 
+      ansible.builtin.import_tasks: task/90.cleanup.yaml

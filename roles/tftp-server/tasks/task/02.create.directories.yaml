@@ -1,0 +1,12 @@
+- name: Create temporary boot directory
+  ansible.builtin.file:
+    path: "{{mount.rootfs.location}}"
+    state: directory
+- name: Create temporary rootfs directory
+  ansible.builtin.file:
+    path: "{{mount.bootfs.location}}"
+    state: directory
+- name: Create download directory for the image we want to download. 
+  ansible.builtin.file:
+    path: "{{image.destination}}"
+    state: directory

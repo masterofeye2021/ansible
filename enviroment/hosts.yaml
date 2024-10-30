@@ -1,0 +1,29 @@
+data:
+  hosts:
+    ironman:
+      #(File and Data Server)
+      ansible_host: 192.168.178.30
+services:
+  hosts:
+    deadpool:
+      ansible_host: 192.168.178.130
+      ansible_ssh_private_key_file: /mnt/config/ssh-key/ansible
+      ansible_user: ansible
+      vars: 
+    wolverine:
+      #(net boot service server)
+      ansible_host: 192.168.178.60
+      #path to the private ssh key file
+      ansible_ssh_private_key_file: /mnt/config/ssh-key/ansible
+      ansible_user: ansible
+      vars:
+        service: tftp
+    quicksilver:
+      #(net boot service server)
+      ansible_host: 192.168.178.61 
+      ansible_ssh_private_key_file: /mnt/config/ssh-key/ansible
+      ansible_user: ansible
+      vars:
+        mac: dc:a6:32:17:bd:dd
+        service: jd2_filebot
+  

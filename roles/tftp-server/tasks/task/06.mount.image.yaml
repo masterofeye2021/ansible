@@ -1,0 +1,15 @@
+- name: Create device maps from partition tables
+  ansible.builtin.command: kpartx -av  {{ image.destination }}/{{ image.file }}
+- name: Make sure the loop devices are free
+  ansible.builtin.command: losetup -d /dev/loop0
+- name: Make sure the loop devices are free
+  ansible.builtin.command: kpartx -dv /dev/loop0
+    #- name: Reload Daemon because the fstab has maybe some changed without restart. This leads to issues when mounting a devices. 
+    #  ansible.builtin.systemd_service:
+    #    daemon_reload: true
+- name: Create the loop map devices
+  ansible.builtin.command: kpartx -av {{ image.destination  }}/{{ image.file }}
+- name: Mount the rootfs from the img to the tempory rootfs directory
+  ansible.builtin.command: mount /dev/mapper/loop0p2 {{mount.rootfs.location}}
+- name: Mount the boot from the img to the tempory boot directory
+  ansible.builtin.command: mount /dev/mapper/loop0p1 {{mount.bootfs.location}}

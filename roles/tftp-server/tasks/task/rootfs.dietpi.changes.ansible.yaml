@@ -1,0 +1,16 @@
+- name: delete the partuuid entries in the fstab
+  ansible.builtin.lineinfile:
+    path: '/mnt/nfsshare/rootfs/{{name_of_folder}}/etc/fstab'
+    state: absent
+    regexp: 'PARTUUID'
+- name: Copy boot files to rootfs
+  copy:
+    remote_src: yes
+    src: /mnt/nfsshare/tftp/{{name_of_folder}}/
+    dest: /mnt/nfsshare/rootfs/{{name_of_folder}}/boot
+- name: Replace the rootfs location in the cmdline.txt file 
+  replace: 
+    path: '/mnt/nfsshare/tftp/{{name_of_folder}}/cmdline.txt'
+    regexp: '^.*$' 
+    replace: 'console=serial0,115200 console=tty1 root=/dev/nfs nfsroot=192.168.178.30:/volume1/rootfs/{{name_of_folder}},vers=3 rw ip=dhcp rootwait elevator=deadline debug nfsrootdebug'
+      
