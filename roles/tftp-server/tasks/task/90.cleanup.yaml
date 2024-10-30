@@ -13,9 +13,9 @@
         - "{{mount.rootfs.location}}"
         - "{{mount.bootfs.location}}"
         - "{{image.dstestination}}"
-    - name: Make sure the loop devices are free
-      ansible.builtin.command: losetup -d /dev/loop0
-      ignore_errors: true
-    - name: Make sure the loop devices are free
-      ansible.builtin.command: kpartx -dv /dev/loop0
-      ignore_errors: true
+- name: Make sure the loop devices are free
+  ansible.builtin.command: losetup -d /dev/loop0
+  ignore_errors: true
+- name: Make sure the loop devices are free
+  ansible.builtin.command: kpartx -dv /dev/loop0
+  ignore_errors: true
