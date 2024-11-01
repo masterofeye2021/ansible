@@ -1,0 +1,7 @@
+- hosts: wolverine
+  become: true
+  roles:
+    - role: '../roles/tftp-server'
+      image_url: https://downloads.raspberrypi.com/raspios_lite_armhf/images/raspios_lite_armhf-2024-07-04/2024-07-04-raspios-bookworm-armhf-lite.img.xz
+      nfs_folder_name: 2c-cf-67-66-e9-ab
+      hostname: beast
