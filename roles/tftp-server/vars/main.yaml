@@ -1,7 +1,8 @@
-image.url: https://downloads.raspberrypi.com/raspios_lite_armhf/images/raspios_lite_armhf-2024-07-04/2024-07-04-raspios-bookworm-armhf-lite.img.xz
+image_url: https://downloads.raspberrypi.com/raspios_lite_armhf/images/raspios_lite_armhf-2024-07-04/2024-07-04-raspios-bookworm-armhf-lite.img.xz
 #image.file: 2024-07-04-raspios-bookworm-armhf-lite.img
-image.file: = {{ image.url.split('_') | last | replace('.xz','') }}
-image.destination: /home/{{ansible_user}}/images
-nfs.folder.name: 2c-cf-67-66-e8-3b
-mount.rootfs.location: /mnt/tmp/root/
-mount.bootfs.location: /mnt/tmp/boot/
+image_file: "{{ image_url.split('/')[-1]  | replace('.xz','') }}"
+image_destination: /home/{{ansible_user}}/images
+nfs_folder_name: 2c-cf-67-66-e8-a1
+mount_rootfs_location: /mnt/tmp/root/
+mount_bootfs_location: /mnt/tmp/boot/
+hostename: unknown

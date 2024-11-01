@@ -1,0 +1,8 @@
+- name: create the download folder
+  ansible.builtin.file:
+    path: /media/download
+    state: directory
+- name: create local JDownloader folder
+  ansible.builtin.file:
+    path: /opt/jd2
+    state: directory

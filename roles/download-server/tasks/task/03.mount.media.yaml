@@ -1,0 +1,7 @@
+- name: Mount the samba download directory 
+  mount:
+    path: /media/download
+    src: //192.168.178.30/media/download
+    fstype: cifs
+    opts: username=ivo,vers=2.0,password=Wiggles12
+    state: present
