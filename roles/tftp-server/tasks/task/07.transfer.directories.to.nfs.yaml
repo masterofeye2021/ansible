@@ -1,4 +1,4 @@
 - name: Transmit the rootfs to the NAS share
-  ansible.builtin.command: rsync -xa --progress {{mount.rootfs.location}} /mnt/nfsshare/rootfs/{{nfs.folder.name}}
+  ansible.builtin.command: rsync -xa --progress {{mount_rootfs_location}} /mnt/nfsshare/rootfs/{{nfs_folder_name}}
 - name: Transmit the boot files to the NAS share
-  ansible.builtin.command: rsync -xa --progress {{mount.bootfs.location}}/mnt/nfsshare/tftp/{{nfs.folder.name}}
+  ansible.builtin.command: rsync -xa --progress {{mount_bootfs_location}} /mnt/nfsshare/tftp/{{nfs_folder_name}}

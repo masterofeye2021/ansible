@@ -1,8 +1,8 @@
 - name: unmount {mount.rootfs.location} directory
-  ansible.builtin.command: umount "{{mount.rootfs.location}}"
+  ansible.builtin.command: umount "{{mount_rootfs_location}}"
   ignore_errors: true
 - name: unmount {mount.bootfs.location} directory
-  ansible.builtin.command: umount "{{mount.bootfs.location}}"
+  ansible.builtin.command: umount "{{mount_bootfs_location}}"
   ignore_errors: true
 - name: Cleanup directories
   file:
@@ -10,9 +10,9 @@
     state: absent
   ignore_errors: true
   with_items:
-        - "{{mount.rootfs.location}}"
-        - "{{mount.bootfs.location}}"
-        - "{{image.dstestination}}"
+        - "{{mount_rootfs_location}}"
+        - "{{mount_bootfs_location}}"
+        - "{{image_destination}}"
 - name: Make sure the loop devices are free
   ansible.builtin.command: losetup -d /dev/loop0
   ignore_errors: true

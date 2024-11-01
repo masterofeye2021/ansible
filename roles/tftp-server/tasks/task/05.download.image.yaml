@@ -1,4 +1,4 @@
-- name: download {{ image.file }}.xz
-  get_url: url={{ image.url }} dest={{ image.destination }}/{{ image.file }}.xz
-- name: Extract {{ image.file }} in {{ image.destination }}
-  ansible.builtin.command: unxz {{ image.destination }}/{{ image.file }}.xz
+- name: download {{ image_file }}.xz
+  get_url: url={{ image_url }} dest={{ image_destination }}/{{ image_file }}.xz
+- name: Extract {{ image_file }} in {{ image_destination }}
+  ansible.builtin.command: unxz {{ image_destination }}/{{ image_file }}.xz
