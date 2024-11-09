@@ -1,0 +1,21 @@
+- name: Benutzer zur Bestätigung auffordern
+  pause:
+    prompt: "Soll die Firstrun.sh nun vom RootFs gelöscht werden (press enter). Bitte vorher sicherstellen, dass das System vollständig initialisiert ist"
+- name: Überprüfe, ob die Datei existiert
+  stat:
+    path: /mnt/nfsshare/rootfs/{{nfs_folder_name}}/opt/firstrun.sh  # Pfad zur Datei, die geprüft werden soll
+  register: file
+- name: Ausgabe, wenn die Datei existiert
+  debug:
+    msg: "/mnt/nfsshare/rootfs/{{nfs_folder_name}}/opt/firstrun.sh not existing."
+- name: Lese den Inhalt der Datei cmdline.txt
+  slurp:
+    src: '/mnt/nfsshare/tftp/{{nfs_folder_name}}/cmdline.txt'  # Pfad zur Datei cmdline.txt
+  register: cmdline_content
+  when: not file.stat.exists
+- name: Entferne spezifische Einträge aus cmdline.txt
+  copy:
+    dest: '/mnt/nfsshare/tftp/{{nfs_folder_name}}/cmdline.txt'  # Pfad zur Datei cmdline.txt
+    content: "{{ cmdline_content['content'] | b64decode | regex_replace('systemd\\.run=/opt/firstrun\\.sh', '') | regex_replace('systemd\\.run_success_action=reboot', '') | regex_replace('systemd\\.unit=kernel-command-line\\.target', '') | regex_replace('\\s+', ' ') | trim }}"
+  when: cmdline_content is defined
+  

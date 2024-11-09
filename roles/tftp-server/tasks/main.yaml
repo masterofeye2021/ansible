@@ -14,6 +14,8 @@
       ansible.builtin.import_tasks: task/07.transfer.directories.to.nfs.yaml
     - name: 
       ansible.builtin.import_tasks: task/08.system.configuration.yaml
+    - name: 
+      ansible.builtin.import_tasks: task/09.delete.firstrun.script.yaml
   always:
     - name: Remove temporary directories, loops devices, 
       ansible.builtin.import_tasks: task/90.cleanup.yaml
