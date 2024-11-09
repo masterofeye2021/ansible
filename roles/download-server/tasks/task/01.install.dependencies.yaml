@@ -4,8 +4,3 @@
     state: present 
     update_cache: true
     when: "'openjdk-17-jre' not in ansible_facts.packages"
-- name: Install pexpect
-  apt:
-    update_cache: yes
-    name:
-      - python3-pexpect
