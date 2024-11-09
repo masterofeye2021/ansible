@@ -1,8 +1,8 @@
 - name: delete the partuuid entries in the fstab
   ansible.builtin.lineinfile:
     path: '/mnt/nfsshare/rootfs/{{nfs_folder_name}}/etc/fstab'
-    state: absent
     regexp: 'PARTUUID'
+    line: '192.168.178.30:/volume1/tftp/{{nfs_folder_name}} /boot nfs defaults,vers=3,proto=tcp 0 0'
 - name: Copy boot files to rootfs
   copy:
     remote_src: yes
@@ -12,25 +12,16 @@
   lineinfile:
         path: '/mnt/nfsshare/tftp/{{nfs_folder_name}}/cmdline.txt'
         regexp: '^.*'  # Regex, die die gesamte erste Zeile erfasst
-        line: 'console=serial0,115200 console=tty1 root=/dev/nfs nfsroot=192.168.178.30:/volume1/rootfs/{{nfs_folder_name}},vers=3 rw ip=dhcp rootwait elevator=deadline debug nfsrootdebug  init=/usr/lib/raspberrypi-sys-mods/firstboot systemd.run=/boot/firstrun.sh systemd.run_success_action=reboot systemd.unit=kernel-command-line.target'
+        line: 'console=serial0,115200 console=tty1 root=/dev/nfs nfsroot=192.168.178.30:/volume1/rootfs/{{nfs_folder_name}},vers=3 rw ip=dhcp rootwait elevator=deadline debug nfsrootdebug systemd.run=/opt/firstrun.sh systemd.run_success_action=reboot systemd.unit=kernel-command-line.target'
         firstmatch: true  # Nur das erste Auftreten ersetzen
-- name: Copy firstrun script to /mnt/nfsshare/tftp/{{nfs_folder_name}}/
+- name: Copy firstrun script to /mnt/nfsshare/rootfs/{{nfs_folder_name}}/opt/"
   copy:
-    dest: "/mnt/nfsshare/tftp/{{nfs_folder_name}}/"
+    dest: "/mnt/nfsshare/rootfs/{{nfs_folder_name}}/opt/"
     src: "/mnt/nfsshare/tftp/common/firstrun.sh"
     mode: '0777'
     remote_src: yes
 - name: Replace hostname in firstrun script with {{ hostname }}
   replace:
-    path: "{{ config_file }}"
+    path: "/mnt/nfsshare/rootfs/{{nfs_folder_name}}/opt/firstrun.sh"
     regexp: 'netbootmaker'
     replace: "{{ hostname }}"
-#- name: Generiere gehashtes Passwort mit OpenSSL
-#  shell: echo ansible | openssl passwd -6 -stdin
-#  register: hashed_password  # Speichert den Ausgabe im 'hashed_password'-Register
-#- name: Schreibe gehashtes Passwort in eine Datei
-#  copy:
-#    dest: "/mnt/nfsshare/tftp/{{nfs_folder_name}}/userconf"  # Zieldatei definieren
-#    content: "ansible:{{ hashed_password.stdout }}"  # Ausgabe des Befehls verwenden
-#    mode: '0777'
-
