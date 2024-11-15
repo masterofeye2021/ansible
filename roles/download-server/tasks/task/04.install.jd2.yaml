@@ -1,0 +1,4 @@
+- name: download jd2 installer
+  get_url: 
+    url: https://installer.jdownloader.org/JDownloader.jar 
+    dest: /opt/jd2/

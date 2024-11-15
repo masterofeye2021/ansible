@@ -1,3 +1,12 @@
-
-
-
+- name: Execute the pre-condistions for the installation
+  ansible.builtin.import_tasks: task/00.pre.install.yaml
+- name: Install all nessacary packages
+  ansible.builtin.include_tasks: task/01.install.dependencies.yaml
+- name:  
+  block:
+    - name: 
+      ansible.builtin.import_tasks: task/02.create.directories.yaml
+    - name: 
+      ansible.builtin.import_tasks: task/03.mount.media.yaml
+    - name: 
+      ansible.builtin.import_tasks: task/04.install.jd2.yaml
