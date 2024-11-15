@@ -1,0 +1,75 @@
+- name: Hole die Hauptversionsnummer von OpenHAB
+  shell: "dpkg -s 'openhab' 2> /dev/null | grep -E '^Version' | cut -d ' ' -f2 | cut -d '.' -f1"
+  register: openhab_major_version
+  changed_when: false
+
+- name: Ausgabe der OpenHAB-Hauptversion
+  debug:
+    msg: "Die installierte Hauptversion von OpenHAB ist: {{ openhab_major_version.stdout }}"
+
+- name: load the GPG Keys and shore them
+  shell: curl -fsL "https://openhab.jfrog.io/artifactory/api/gpg/key/public" | gpg --dearmor | sudo tee "/usr/share/keyrings/openhab.gpg"
+  when:  openhab_major_version.stdout == ""
+
+- name: write the openhab repository in the source list
+  lineinfile:
+    path: /etc/apt/sources.list.d/openhab.list
+    line: "deb [signed-by=/usr/share/keyrings/openhab.gpg] https://openhab.jfrog.io/artifactory/openhab-linuxpkg stable main"
+    create: yes 
+  when:  openhab_major_version.stdout == ""
+
+- name: Repair brocken packages
+  shell: dpkg --configure -a
+  when:  openhab_major_version.stdout == ""
+
+- name: Update repositories cache
+  ansible.builtin.apt:
+    update_cache: yes
+  when:  openhab_major_version.stdout == ""
+
+- name: Finde neueste Version des OpenHAB-Pakets
+  shell: apt-cache madison openhab | head -n 1 | cut -d'|' -f2 | xargs
+  register: openhab_version
+  changed_when: false
+  when:  openhab_major_version.stdout == ""
+
+- name: Installiere OpenHAB und OpenHAB-Addons mit festgelegter Version
+  apt:
+    name:
+      - "openhab={{ openhab_version.stdout }}"
+      - "openhab-addons={{ openhab_version.stdout }}"
+    state: present
+    allow_downgrade: yes
+  when:  openhab_major_version.stdout == ""
+
+- name: Aktiviere den OpenHAB Service
+  systemd:
+    name: "openhab.service"
+    enabled: yes
+    state: restarted
+
+- name: 
+  lineinfile:
+    path: /etc/default/openhab
+    regexp: '(^[^#].*EXTRA_JAVA_OPTS=.*$)'
+    line: 'EXTRA_JAVA_OPTS="-Xms192m -Xmx768m -XX:-TieredCompilation -XX:+ExitOnOutOfMemoryError -Dxtext.qn.interning=true"'
+    backrefs: yes
+    state: present
+
+- name: Ersetze EXTRA_JAVA_OPTS in /etc/default/openhab
+  shell: |
+        sed -i -e '/^[^#]/ s/\(^.*EXTRA_JAVA_OPTS=.*$\)/EXTRA_JAVA_OPTS="-Xms192m -Xmx768m -XX:-TieredCompilation -XX:+ExitOnOutOfMemoryError -Dxtext.qn.interning=true"/' /etc/default/openhab
+- name: Setze den HTTP-Port für OpenHAB auf 8080
+  shell: "sed -i -e 's|^#*.*OPENHAB_HTTP_PORT=.*$|OPENHAB_HTTP_PORT=8080|g' /etc/default/openhab"
+
+- name: Setze den HTTPS-Port für OpenHAB auf 8443
+  shell: "sed -i -e 's|^#*.*OPENHAB_HTTPS_PORT=.*$|OPENHAB_HTTPS_PORT=8443|g' /etc/default/openhab"
+
+- name: Setze sshHost in /etc/openhab/services/runtime.cfg
+  shell: "sed -i -e 's|^#.*sshHost = .*$|org.apache.karaf.shell:sshHost = 0.0.0.0|g' /etc/openhab/services/runtime.cfg"
+
+- name: Setze sshHost in /var/lib/openhab/etc/org.apache.karaf.shell.cfg
+  shell: "sed -i -e 's|^#.*sshHost = .*$|sshHost = 0.0.0.0|g' /var/lib/openhab/etc/org.apache.karaf.shell.cfg"
+
+- name: Setze den sshPass in /var/lib/openhab/etc/users.properties
+  shell: "sed -i -e 's|openhab = .*,|openhab = {{ openhabpw }},|g' /var/lib/openhab/etc/users.properties"

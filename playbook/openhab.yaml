@@ -1,0 +1,5 @@
+- hosts: galactus
+  become: true
+  vars:  
+  roles:
+    - role: '../roles/openhab-server'

@@ -1,0 +1,9 @@
+- name: Download the official {{ jdkversion }} package form Bell-sw
+  ansible.builtin.shell:
+    wget -qO /home/ansible/{{ jdkversion }}.deb https://download.bell-sw.com/java/{{ jdkversion }}/bellsoft-jdk{{ jdkversion }}-linux-arm32-vfp-hflt.deb
+
+- name: Install the {{ jdkversion }}.deb package
+  ansible.builtin.shell: "apt install -f /home/ansible/{{ jdkversion }}.deb"
+
+- name: remove the {{ jdkversion }}.deb package
+  ansible.builtin.shell: "rm /home/ansible/{{ jdkversion }}.deb"

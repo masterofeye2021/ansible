@@ -5,6 +5,12 @@ data:
       ansible_host: 192.168.178.30
 services:
   hosts:
+    galactus:
+      ansible_host: 192.168.178.232
+      ansible_ssh_private_key_file: /mnt/config/ssh-key/ansible
+      ansible_user: ansible
+      ansible_become_password: ansible
+      vars: 
     deadpool:
       ansible_host: 192.168.178.130
       ansible_ssh_private_key_file: /mnt/config/ssh-key/ansible

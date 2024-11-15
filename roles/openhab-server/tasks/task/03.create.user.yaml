@@ -1,0 +1,15 @@
+    - name: Prüfe, ob der Benutzer existiert
+      ansible.builtin.user:
+        name: "{{ openhabuser }}"
+      register: user_check
+      ignore_errors: true
+    - name: Benutzer erstellen, falls er nicht existiert
+      ansible.builtin.user:
+        name: "{{ openhabuser }}"
+        shell: /bin/bash
+        password: "{{ openhabpw | password_hash('sha512') }}"
+        home: "/home/{{ openhabuser }}"
+        comment: "openHABian - OpenHAB Admin User"
+        groups: "{{ openhabgroups | join(',') }}"
+        append: true
+        state: present

@@ -1,0 +1,48 @@
+#- name: Generate mount point variable
+##  ansible.builtin.set_fact:
+ #   mount_point: "{{ 'srv/openhab-' + item.destination | systemd-escape(suffix='mount') }}"
+#  loop: "{{ mount_points }}"
+
+- name: Erstelle Verzeichnisse für OpenHAB
+  file:
+    path: "/srv/openhab/{{ item }}"
+    state: directory
+    mode: '0755'
+  loop:
+    - sys
+    - conf
+    - userdata
+    - addons
+- name: Load and configure srv_mount_template for each mount point
+  ansible.builtin.template:
+    src: "mount_template.j2"
+    dest: "/etc/systemd/system/{{ 'srv-openhab-' + item.destination + '.mount'}}"
+    mode: '0644'
+    owner: root
+    group: root
+    backup: yes
+  loop: "{{ mount_points }}"
+  vars:
+    SRC: "{{ item.source }}"
+    DEST: "{{ item.destination }}"
+- name: Reload systemd daemon if any template was modified
+  ansible.builtin.systemd:
+    daemon_reload: yes
+- name: Enable and start each systemd mount
+  ansible.builtin.systemd:
+    name: "{{ 'srv-openhab-' + item.destination + '.mount' }}"
+    enabled: true
+    state: restarted
+  loop: "{{ mount_points }}"     
+- name: Ensure openHAB directories exist
+  ansible.builtin.file:
+    path: "/srv/openhab/{{ item }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+  loop:
+        - sys
+        - conf
+        - userdata
+        - addons

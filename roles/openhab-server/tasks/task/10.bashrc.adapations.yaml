@@ -1,0 +1,46 @@
+- name: Copy bash.bashrc to system configuration
+  ansible.builtin.copy:
+    src: "bashrc/bash.bashrc"
+    dest: "/etc/bash.bashrc"
+    owner: root
+    group: root
+    mode: '0644'
+- name: Copy bashrc-root to root-Bash-Configuration
+  ansible.builtin.copy:
+    src: "bashrc/bashrc-root"
+    dest: "/root/.bashrc"
+    owner: root
+    group: root
+    mode: '0644'
+- name: Kopiere bash_profile zur User-Bash-configuration
+  ansible.builtin.copy:
+    src: "bashrc/bash_profile"
+    dest: "/home/{{ openhabuser }}/.bash_profile"
+    owner: "{{ openhabuser }}"
+    group: "{{ openhabuser }}"
+    mode: '0644'
+- name: Copy bash_aliases to Benutzer-Bash-Alias Configuration
+  ansible.builtin.copy:
+    src: "bashrc/bash_aliases"
+    dest: "/home/{{ openhabuser }}/.bash_aliases"
+    owner: "{{ openhabuser }}"
+    group: "{{ openhabuser }}"
+    mode: '0644'
+- name: Set correct access rights
+  ansible.builtin.file:
+    path: "/home/{{ username }}/.bash_*"
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    state: file
+- name: Copy bash_aliases to root-Bash-Alias Configuration
+  ansible.builtin.copy:
+    src: "{{ playbook_dir }}/files/bash_aliases"
+    dest: "/root/.bash_aliases"
+    owner: root
+    group: root
+    mode: '0644'
+
+
+  
+  
+  

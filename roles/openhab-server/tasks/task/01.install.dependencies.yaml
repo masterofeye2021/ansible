@@ -1,0 +1,111 @@
+- name: Gather the package facts
+  ansible.builtin.package_facts:
+    manager: apt
+- name: "Check if acl is installed and install it when missing"
+  apt: 
+    name: acl
+    state: present 
+    update_cache: false
+  when: "'acl' not in ansible_facts.packages"
+- name: "Check if arping is installed and install it when missing"
+  apt: 
+    name: arping 
+    state: present 
+    update_cache: false
+  when: "'arping' not in ansible_facts.packages"
+- name: "Check if bzip2 is installed and install it when missing"
+  apt: 
+    name: bzip2 
+    state: present 
+    update_cache: false
+  when: "'bzip2' not in ansible_facts.packages"
+- name: "Check if coreutils is installed and install it when missing"
+  apt: 
+    name: coreutils 
+    state: present 
+    update_cache: false
+  when: "'coreutils' not in ansible_facts.packages"
+- name: "Check if dirmngr is installed and install it when missing"
+  apt: 
+    name: dirmngr 
+    state: present 
+    update_cache: false
+  when: "'dirmngr' not in ansible_facts.packages"
+- name: "Check if htop is installed and install it when missing"
+  apt: 
+    name: htop 
+    state: present 
+    update_cache: false
+  when: "'htop' not in ansible_facts.packages"
+- name: "Check if telnet is installed and install it when missing"
+  apt: 
+    name: telnet 
+    state: present 
+    update_cache: false
+  when: "'telnet' not in ansible_facts.packages"
+- name: "Check if usbutils is installed and install it when missing"
+  apt: 
+    name: usbutils 
+    state: present 
+    update_cache: false
+  when: "'usbutils' not in ansible_facts.packages"
+- name: "Check if xz-utils  is installed and install it when missing"
+  apt: 
+    name: xz-utils 
+    state: present 
+    update_cache: false
+  when: "'xz-utils' not in ansible_facts.packages"
+- name: "Check if apt-transport-https  is installed and install it when missing"
+  apt: 
+    name: apt-transport-https 
+    state: present 
+    update_cache: false
+  when: "'apt-transport-https' not in ansible_facts.packages"
+- name: "Check if avahi-daemon is installed and install it when missing"
+  apt: 
+    name: avahi-daemon 
+    state: present 
+    update_cache: false
+  when: "'avahi-daemon' not in ansible_facts.packages"
+- name: "Check if bc is installed and install it when missing"
+  apt: 
+    name: bc 
+    state: present 
+    update_cache: false
+  when: "'bc' not in ansible_facts.packages"
+- name: "Check if jq  is installed and install it when missing"
+  apt: 
+    name: jq 
+    state: present 
+    update_cache: false
+  when: "'jq' not in ansible_facts.packages"
+- name: "Check if mbpoll is installed and install it when missing"
+  apt: 
+    name: mbpoll 
+    state: present 
+    update_cache: false
+  when: "'mbpoll' not in ansible_facts.packages"
+- name: "Check if moreutils is installed and install it when missing"
+  apt: 
+    name: moreutils 
+    state: present 
+    update_cache: false
+  when: "'moreutils' not in ansible_facts.packages"
+- name: "Check if sysstat is installed and install it when missing"
+  apt: 
+    name: sysstat 
+    state: present 
+    update_cache: false
+  when: "'sysstat' not in ansible_facts.packages"
+- name: "Check if fontconfig is installed and install it when missing"
+  apt: 
+    name: fontconfig 
+    state: present 
+    update_cache: false
+  when: "'fontconfig' not in ansible_facts.packages"
+
+
+
+
+
+  

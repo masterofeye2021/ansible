@@ -1,46 +1,13 @@
-
-- name: Ensure group "admin" exists
-  ansible.builtin.group:
-    name: admin
-    state: present
-
-- name: Remove user
-  ansible.builtin.user:
-    name: "{{ item.name }}"
-    state: absent
-    remove: yes
-  with_items: "{{ user_details }}"
-
-
-- name: Create user
-  ansible.builtin.user:
-    name: "{{ item.name }}"
-    groups: "{{ item.groups }}"
-    shell: "/bin/bash"
-    state: present
-  with_items: "{{ user_details }}"
-
-# Allow 'johndoe' to execute all commands using sudo without a password
-- name: Give johndoe passwordless sudo access
-  lineinfile:
-    path: /etc/sudoers
-    state: present
-    regexp: '^{{ item.name }}'
-    line: '{{ item.name }} ALL=(ALL:ALL) NOPASSWD: ALL'
-    validate: '/usr/sbin/visudo -cf %s'
-  with_items: "{{ user_details }}"
-    
-- name: Add authorized_key to host
-  authorized_key:
-    user: "{{ item.name }}"
-    state: present
-    key: "{{ lookup('file', item.pkey) }}"
-  with_items: "{{ user_details }}"
-
-- import_tasks: playbook-update/update.ansible.yaml
-
-- name: Install ACL to support change of privilaged non root user_details
-  apt:
-    name: acl
-    state: present
+- name: Execute the pre-condistions for the installation
+  ansible.builtin.import_tasks: task/00.pre.install.yaml
+- name: Install all nessacary packages
+  ansible.builtin.include_tasks: task/01.install.dependencies.yaml
+- name:  
+  ansible.builtin.import_tasks: task/02.install.java.yaml
+- name:  
+  ansible.builtin.import_tasks: task/03.create.user.yaml
+- name:  
+  ansible.builtin.import_tasks: task/04.install.openhab.yaml
+- name:  
+  ansible.builtin.import_tasks: task/20.create.mountpoints.yaml
 
